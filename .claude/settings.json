@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(./bts:*)",
+      "Bash(ffprobe:*)",
+      "Read(projects/**)",
+      "Edit(projects/**)",
+      "Write(projects/**)"
+    ]
+  }
+}

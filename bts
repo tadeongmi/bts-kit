@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+# One entry point for every tool: ./bts <command> [args]. Run ./bts with no command for the list.
+set -euo pipefail
+KIT="$(cd "$(dirname "$0")" && pwd)"
+
+# Homebrew's ffmpeg-full is keg-only; use it when setup.sh had to install it
+for p in /opt/homebrew/opt/ffmpeg-full/bin /usr/local/opt/ffmpeg-full/bin; do
+  [ -d "$p" ] && PATH="$p:$PATH"
+done
+PY="$KIT/.venv/bin/python"
+[ -x "$PY" ] || PY=python3
+
+cmd="${1:-}"
+if [ -z "$cmd" ] || [ ! -f "$KIT/tools/$cmd.py" ] || [ "$cmd" = common ] || [ "$cmd" = subs ]; then
+  cat <<'EOF'
+Usage: ./bts <command> ...
+  doctor                              check the install
+  new <name> <footage folder> [--lang es]
+  transcribe <project> [--model M]    resumable; slow, run in the background
+  digest <project>                    rebuild transcripts/ALL.md
+  find <project> <text>               search every transcript
+  words <project> <clip> [from] [to]  words with exact times
+  sheet <project> <clip> [from] [to]  contact sheet; --at <time> for one gridded frame
+  version <project>                   copy the latest cut list to the next version
+  check <project> <version>           validate a cut list, write its .md
+  render <project> <version> [--final]
+EOF
+  exit 1
+fi
+shift
+exec "$PY" "$KIT/tools/$cmd.py" "$@"

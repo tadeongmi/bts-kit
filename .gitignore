@@ -1,0 +1,6 @@
+.venv/
+projects/*
+!projects/README.md
+__pycache__/
+.DS_Store
+.doctor-tone.wav
